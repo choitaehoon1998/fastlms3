@@ -43,7 +43,8 @@ public class MemberDto {
     long seq;
 
     List<LoginHistory> loginHistoryList;
-    
+
+    LocalDateTime lastLoginDt;
     
     public static MemberDto of(Member member) {
         
