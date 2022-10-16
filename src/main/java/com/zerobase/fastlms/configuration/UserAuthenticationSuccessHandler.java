@@ -31,6 +31,9 @@ public class UserAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuc
         Optional<Member> memberOptional = memberRepository.findById(userId);
 
         if(memberOptional.isPresent()){
+            Member member =memberOptional.get();
+            member.setLastLoginDt(LocalDateTime.now());
+            memberRepository.save(member);
 
             String userAgent = RequestUtils.getUserAgent(request);
             String clientIp =RequestUtils.getClientIp(request);

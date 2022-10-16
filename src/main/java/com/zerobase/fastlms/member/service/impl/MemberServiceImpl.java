@@ -5,6 +5,7 @@ import com.zerobase.fastlms.admin.mapper.MemberMapper;
 import com.zerobase.fastlms.admin.model.MemberParam;
 import com.zerobase.fastlms.components.MailComponents;
 import com.zerobase.fastlms.course.model.ServiceResult;
+import com.zerobase.fastlms.loginHistory.repository.LoginHistoryRepository;
 import com.zerobase.fastlms.member.entity.Member;
 import com.zerobase.fastlms.member.entity.MemberCode;
 import com.zerobase.fastlms.member.exception.MemberNotEmailAuthException;
@@ -37,9 +38,8 @@ public class MemberServiceImpl implements MemberService {
     
     private final MemberRepository memberRepository;
     private final MailComponents mailComponents;
-    
     private final MemberMapper memberMapper;
-    
+    private final LoginHistoryRepository loginHistoryRepository;
     /**
      * 회원 가입
      */
@@ -153,8 +153,9 @@ public class MemberServiceImpl implements MemberService {
         }
         
         Member member = optionalMember.get();
-        
-        return MemberDto.of(member);
+        MemberDto memberDto = MemberDto.of(member);
+        loginHistoryRepository.findByUserId(member.getUserId()).ifPresent(memberDto::setLoginHistoryList);
+        return memberDto;
     }
     
     @Override
